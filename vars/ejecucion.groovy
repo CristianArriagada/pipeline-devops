@@ -11,6 +11,11 @@ def call(){
                 choices: ['Maven', 'Gradle'],
                 description: 'Seleccione herramienta de compilacion'
             )
+            string (
+                name: 'stages',
+                description: 'Ingrese los stages para ejecutar',
+                trim: true
+            ) 
         }
         stages {
             stage("Pipeline"){
@@ -21,12 +26,12 @@ def call(){
                             case 'Maven':
                                 //def ejecucion = load 'maven.groovy'
                                 //ejecucion.call()
-                                maven.call()
+                                maven.call(params.stages)
                             break;
                             case 'Gradle':
                                 //def ejecucion = load 'gradle.groovy'
                                 //ejecucion.call() 
-                                gradle.call()
+                                gradle.call(params.stages)
                             break;
                         }
                     }
@@ -36,7 +41,7 @@ def call(){
                         slackSend color: 'good', message: "[Cristian] [${JOB_NAME}] [${BUILD_TAG}] Ejecucion Exitosa", teamDomain: 'dipdevopsusac-tr94431', tokenCredentialId: 'token-slack'
                     }
                     failure{
-                        slackSend color: 'danger', message: "[Cristian] [${env.JOB_NAME}] [${BUILD_TAG}] Ejecucion fallida en stage [${STAGE_NAME}]", teamDomain: 'dipdevopsusac-tr94431', tokenCredentialId: 'token-slack'
+                        slackSend color: 'danger', message: "[Cristian] [${env.JOB_NAME}] [${BUILD_TAG}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'dipdevopsusac-tr94431', tokenCredentialId: 'token-slack'
                     }
                 }
             }
