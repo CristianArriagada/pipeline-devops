@@ -5,6 +5,24 @@ def call(){
             NEXUS_USER         = credentials('user-nexus')
             NEXUS_PASSWORD     = credentials('password-nexus')
         }
+        triggers {
+            GenericTrigger(
+                genericVariables: [
+                [key: 'ref', value: '$.ref']
+                ],
+                genericRequestVariables: [
+                    [key: 'stages', regexpFilter: '']
+                ],
+                    causeString: 'Triggered on $compileTool',
+                token: '123',
+                tokenCredentialId: '',
+                printContributedVariables: true,
+                printPostContent: true,
+                silentResponse: false,
+                regexpFilterText: '$ref',
+                regexpFilterExpression: 'refs/heads/' + BRANCH_NAME
+            )
+        }
         parameters {
             choice(
                 name:'compileTool',
